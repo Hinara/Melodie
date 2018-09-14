@@ -4,9 +4,33 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"time"
 )
+
+func (s *Server) routineNext() {
+	s.Lock()
+	defer s.Unlock()
+	if s.repeat == RepeatOne {
+		return
+	}
+	if s.random {
+		if s.repeat == Repeat {
+			s.playing = rand.Intn(len(s.playlist))
+		} else {
+			s.playing = rand.Intn(len(s.playlist) + 1)
+		}
+	} else {
+		s.playing++
+	}
+	if s.playing >= len(s.playlist) {
+		if s.repeat != Repeat {
+			s.state = Stopped
+		}
+		s.playing = 0
+	}
+}
 
 func (s *Server) playingRoutine(soundDataChan chan []byte) {
 	// 960 packet size 24000 Frequency forced by discord 2 is for the number of channel
@@ -26,7 +50,8 @@ func (s *Server) playingRoutine(soundDataChan chan []byte) {
 			if !skip {
 				data, ok := <-soundDataChan
 				if !ok {
-					s.state = Stopped
+					s.routineNext()
+					return
 				}
 				vc.OpusSend <- data
 			}

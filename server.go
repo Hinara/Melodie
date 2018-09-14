@@ -16,6 +16,12 @@ const (
 	Paused
 )
 
+const (
+	NoRepeat = iota
+	Repeat
+	RepeatOne
+)
+
 //Server is a structure containing all information about a connection to a guild
 type Server struct {
 	sync.Mutex
@@ -23,7 +29,8 @@ type Server struct {
 	reloadChan chan bool
 	state      int8
 	playing    int
-	repeat     bool
+	repeat     int8
+	random     bool
 	playlist   []string
 	guildID    string
 }
@@ -55,6 +62,18 @@ func (s *Server) Playing() int {
 	s.Lock()
 	defer s.Unlock()
 	return s.playing
+}
+
+func (s *Server) Repeat() int8 {
+	s.Lock()
+	defer s.Unlock()
+	return s.repeat
+}
+
+func (s *Server) Random() bool {
+	s.Lock()
+	defer s.Unlock()
+	return s.random
 }
 
 func (s *Server) State() int8 {
@@ -141,10 +160,16 @@ func (s *Server) Select(i int) error {
 	return nil
 }
 
-func (s *Server) SetRepeat(b bool) {
+func (s *Server) SetRepeat(repeat int8) {
 	s.Lock()
 	defer s.Unlock()
-	s.repeat = b
+	s.repeat = repeat
+}
+
+func (s *Server) SetRandom(random bool) {
+	s.Lock()
+	defer s.Unlock()
+	s.random = random
 }
 
 func (s *Server) Play() error {
