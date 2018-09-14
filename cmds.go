@@ -12,7 +12,7 @@ const (
 	soundPath = "./sound/"
 
 	/* Bot prefix */
-	prefix = "!musicbot"
+	prefix = "!mb"
 
 	/* The help text */
 	help = "The available commands are :\n" +
