@@ -41,7 +41,6 @@ func (s *Server) playingRoutine(soundDataChan chan []byte) {
 	for {
 		select {
 		case reload := <-s.reloadChan:
-			fmt.Println(reload)
 			if reload {
 				return
 			}
