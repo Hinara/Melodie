@@ -233,9 +233,24 @@ func commandPlay(message []string, s *Server) string {
 	if len(message) != 2 && len(message) != 3 {
 		return "The correct use of `play` command is `" + prefix + " play`"
 	}
+	if len(message) == 3 {
+		n, err := strconv.Atoi(message[2])
+		if err != nil {
+			return "The parameter is not a valid number"
+		}
+		err = s.Select(n)
+		if err != nil {
+			return err.Error()
+		}
+		s.Play()
+	} else {
+		if s.State() == Playing {
+			return "Already playing"
+		}
 	err := s.Play()
 	if err != nil {
 		return err.Error()
+	}
 	}
 	return "Play the music"
 }

@@ -137,8 +137,6 @@ func (s *Server) Select(i int) error {
 	if s.state != Stopped {
 		s.state = Playing
 		s.reloadChan <- true
-		s.Unlock()
-		return nil
 	}
 	return nil
 }
@@ -153,7 +151,7 @@ func (s *Server) Play() error {
 	s.Lock()
 	defer s.Unlock()
 	if s.state == Playing {
-		return errors.New("Already playing")
+		return nil
 	}
 	if len(s.playlist) <= 0 {
 		return errors.New("Empty playlist")

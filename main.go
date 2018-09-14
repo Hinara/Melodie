@@ -89,7 +89,6 @@ func main() {
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
 	select {
 	case <-c:
-		break
 	case <-shutdownChan:
 		break
 	}
