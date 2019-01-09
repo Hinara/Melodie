@@ -140,7 +140,6 @@ func (s *Server) Next() error {
 	if s.state != Stopped {
 		s.state = Playing
 		s.reloadChan <- true
-		s.Unlock()
 		return nil
 	}
 	return nil
