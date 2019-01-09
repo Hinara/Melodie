@@ -53,6 +53,7 @@ func main() {
 	token := os.Getenv("TOKEN")
 	if token == "" {
 		fmt.Println("No token provided")
+		return
 	}
 
 	// Create a new Discord session using the provided token.
